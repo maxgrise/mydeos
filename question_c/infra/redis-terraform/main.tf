@@ -56,12 +56,29 @@ resource "random_password" "redis_lru_cache_password" {
   override_special = "!#$%&*()-_=+[]{}<>:?"
 }
 
+resource "aws_elasticache_parameter_group" "lru_cache_parameters" {
+  name   = "lru_cache_parameters"
+  family = "redis2.8"
+
+  parameter {
+    name  = "maxmemory-policy"
+    value = "allkeys-lru"
+  }
+
+    parameter {
+    name  = "maxmemory"
+    value = var.redis_max_memory
+  }
+}
+
+
 resource "aws_elasticache_replication_group" "redis_lru_cache" {
   replication_group_id          = "lru_cache_global"
   replication_group_description = "Lru Cache Provider Replication Group"
   node_type                     = "cache.t2.micro"
   number_cache_clusters         = var.redis_node_count
   auth_token                    = random_password.redis_lru_cache_password.result
+  parameter_group_name          = aws_elasticache_parameter_group.lru_cache_parameters.name
 
   cluster_mode {
     replicas_per_node_group = 1
@@ -78,7 +95,7 @@ resource "aws_secretsmanager_secret" "lru_cache_redis_credentials" {
 }
 
 resource "aws_secretsmanager_secret_version" "lru_cache_redis_credentials" {
-  secret_id     = aws_secretsmanager_secret.lru_cache_redis_credentials.id
+  secret_id = aws_secretsmanager_secret.lru_cache_redis_credentials.id
   secret_string = jsonencode({
     password = aws_elasticache_replication_group.redis_lru_cache.auth_token
   })

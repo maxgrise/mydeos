@@ -1,0 +1,72 @@
+version: '3'
+services:
+  redis:
+    image: 'redis/redis-stack:latest'
+    ports:
+      - '6379:6379'
+      - '8001:8001'
+    environment:
+      REDIS_ARGS: "--requirepass developer"
+
+  producer-1:
+    build:
+      context: ./SampleApp
+      dockerfile: Dockerfile-producer
+    environment:
+      LRU_CACHE_MAX_SIZE: 5000
+      LRU_CACHE_MAX_ITEM_COUNT: 200
+      LRU_CACHE_REDIS_PASSWORD: developer
+      LRU_CACHE_REDIS_HOST: redis
+      LRU_CACHE_REDIS_PORT: 6379
+      SERVICE_NAME: producer-1
+    volumes:
+      - ./library/:/library
+
+  producer-2:
+    build:
+      context: ./SampleApp
+      dockerfile: Dockerfile-producer
+    environment:
+      LRU_CACHE_MAX_SIZE: 5000
+      LRU_CACHE_MAX_ITEM_COUNT: 200
+      LRU_CACHE_REDIS_PASSWORD: developer
+      LRU_CACHE_REDIS_HOST: redis
+      LRU_CACHE_REDIS_PORT: 6379
+      SERVICE_NAME: producer-2
+    volumes:
+      - ./library/:/library
+
+  producer-3:
+    build:
+      context: ./SampleApp
+      dockerfile: Dockerfile-producer
+    environment:
+      LRU_CACHE_MAX_SIZE: 5000
+      LRU_CACHE_MAX_ITEM_COUNT: 200
+      LRU_CACHE_REDIS_PASSWORD: developer
+      LRU_CACHE_REDIS_HOST: redis
+      LRU_CACHE_REDIS_PORT: 6379
+      SERVICE_NAME: producer-3
+    volumes:
+      - ./library/:/library
+
+  consumer:
+    scale: 5
+    build:
+      context: ./SampleApp
+      dockerfile: Dockerfile-consumer
+    environment:
+      LRU_CACHE_MAX_SIZE: 5000
+      LRU_CACHE_MAX_ITEM_COUNT: 200
+      LRU_CACHE_REDIS_PASSWORD: developer
+      LRU_CACHE_REDIS_HOST: redis
+      LRU_CACHE_REDIS_PORT: 6379
+      LRU_CACHE_SAMPLE_SERVICE_COUNT: 3
+    depends_on:
+      - producer-1
+      - producer-2
+      - producer-3
+    volumes:
+      - ./library/:/library
+networks:
+  default:

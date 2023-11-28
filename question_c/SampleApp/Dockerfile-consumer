@@ -1,0 +1,9 @@
+FROM mcr.microsoft.com/devcontainers/typescript-node
+
+COPY ./ /app
+
+WORKDIR /app
+
+RUN npm install
+
+CMD [ "npx", "ts-node", "service_consumer.ts" ]
