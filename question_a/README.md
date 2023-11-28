@@ -8,4 +8,4 @@ Subtility is reversing the pole when the line is right to left.
 
 ### Running
 
-`npm run test`
+`npm install && npm run test`

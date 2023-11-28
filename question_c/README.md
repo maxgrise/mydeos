@@ -10,7 +10,7 @@ Cache LRU expiry is done with redis native maxmemory policy with LRU based evict
 
 Assumed that the requirements are simple enough in the sense that the entries size is rather stable, so that a maximum count of items and a max size per item is enough to properly configure a given service's cache, rather than a full cache size maximum.
 
-### Installation
+### Running
 
 `docker-compose build && docker-compose up` to run the whole thing, which is a redis stack, several replicas of producers and consumers.
 

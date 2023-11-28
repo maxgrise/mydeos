@@ -8,4 +8,4 @@ An assumption being that the version are in the form "Major.minor" only.
 
 ### Running
 
-`npm run test`
+`npm install && npm run test`
