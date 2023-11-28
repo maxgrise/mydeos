@@ -22,7 +22,8 @@ Assumed that the requirements are simple enough in the sense that the entries si
 
 #### Missing
 
-- Deploy on the cloud (here AWS)
+- Have possibility to push remote cache updates locally, or tweak to have a local expiry smaller than the remote one, to avoid stale local cache. 
+- Deploy on the cloud
 - Use log framework 
 - Proper unit tests
 - Deployment of library to an artifact registry (artifactory, npm, etc...)
